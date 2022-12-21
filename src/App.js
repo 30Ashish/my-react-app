@@ -1,42 +1,34 @@
+import axios from "axios";
 import { useState } from "react";
 
 function App() {
-  let [theme, setTheme] = useState("warning");
+  let [title] = useState("API DEMO");
+  let [messageList, setMessageList] = useState([]);
 
-  let makePrimaryTheme = () => {
-    theme = "primary";
-    setTheme(theme);
+  // Funcns
+  let getAllMessages = async () => {
+    let url = `http://localhost:3001/messages`;
+    let response = await axios.get(url);
+    // console.log(response);
+
+    // Getting the Message From Server :: And re-rendering
+    messageList = [...response.data];
+    setMessageList(messageList);
   };
-  let makeSuccessTheme = () => {
-    theme = "success";
-    setTheme(theme);
-  };
-  let makeDangerTheme = () => {
-    theme = "danger";
-    setTheme(theme);
-  };
+
   return (
     <div>
-      <h1 className={`bg-${theme} text-light p-3`}>Theme light{theme}</h1>
+      <h1>{title}</h1>
 
       <input
-        className="btn btn-primary"
         type="button"
-        value="Primary"
-        onClick={makePrimaryTheme}
+        value="Make Ajax/API Call"
+        onClick={getAllMessages}
       />
-      <input
-        className="btn btn-success"
-        type="button"
-        value="Success"
-        onClick={makeSuccessTheme}
-      />
-      <input
-        className="btn btn-danger"
-        type="button"
-        value="Denger"
-        onClick={makeDangerTheme}
-      />
+
+      {messageList.map((item) => (
+        <div>{item.message}</div>
+      ))}
     </div>
   );
 }
